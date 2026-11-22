@@ -1,5 +1,48 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-22T05:00:00Z",
-  "apps": []
+  "updatedAt": "2026-11-22T09:00:00Z",
+  "apps": [
+    {
+      "id": "win-boost",
+      "name": "WinBoost",
+      "tagline": "Optimisation système et performances Windows en un clic",
+      "description": "Suite d'optimisation et de maintenance Windows légère permettant d'ajuster les performances système, nettoyer les tâches superflues et superviser vos réglages en toute sécurité.",
+      "category": "Outils",
+      "repo": "ciraam/win-boost",
+      "icon": "win-boost",
+      "assetPattern": "*windows-x64.zip",
+      "executableName": "winboost-ui.exe",
+      "accentColor": "#6366F1",
+      "homepage": "https://github.com/ciraam/win-boost",
+      "source": "github"
+    },
+    {
+      "id": "net-boost",
+      "name": "NetBoost",
+      "tagline": "Diagnostic réseau, latence réduite et réglages TCP/IP",
+      "description": "Utilitaire réseau Windows conçu pour optimiser la latence, diagnostiquer votre connexion et appliquer des profils réseau propres et réversibles.",
+      "category": "Utilitaires",
+      "repo": "ciraam/net-boost",
+      "icon": "net-boost",
+      "assetPattern": "*windows-x64.zip",
+      "executableName": "netboost.exe",
+      "accentColor": "#2DD4BF",
+      "homepage": "https://github.com/ciraam/net-boost",
+      "source": "github"
+    },
+    {
+      "id": "orthocorrect",
+      "name": "OrthoCorrect",
+      "tagline": "Correction orthographique et grammaticale rapide sur bureau",
+      "description": "Assistant de correction orthographique et stylistique intégré au bureau pour relire et améliorer vos textes instantanément.",
+      "category": "Créativité",
+      "repo": "ciraam/orthocorrect",
+      "icon": "orthocorrect",
+      "assetPattern": "*windows*.zip",
+      "executableName": "orthocorrect.exe",
+      "accentColor": "#A78BFA",
+      "homepage": "https://github.com/ciraam/orthocorrect",
+      "source": "github"
+    }
+  ]
 }

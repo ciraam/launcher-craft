@@ -1,12 +1,15 @@
 import {
+  Activity,
   Camera,
   FileCode2,
   Film,
+  Gauge,
   Layers,
   Package,
   Search,
   Send,
   Sparkles,
+  SpellCheck,
   Terminal,
   Zap,
 } from "lucide-react";
@@ -20,6 +23,9 @@ interface AppIconProps {
 }
 
 const ICON_MAP: Record<string, typeof Package> = {
+  "win-boost": Gauge,
+  "net-boost": Activity,
+  orthocorrect: SpellCheck,
   localsend: Send,
   "flow-launcher": Zap,
   screentogif: Film,

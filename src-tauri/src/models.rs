@@ -9,6 +9,10 @@ fn default_theme() -> String {
     "dark".to_string()
 }
 
+fn default_minimize_to_tray() -> bool {
+    true
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AppEntry {
@@ -113,6 +117,8 @@ pub struct Settings {
     pub require_sha256: bool,
     #[serde(default = "default_theme")]
     pub theme: String, // "dark" | "light" | "system"
+    #[serde(default = "default_minimize_to_tray")]
+    pub minimize_to_tray: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

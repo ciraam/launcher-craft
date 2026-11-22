@@ -26,6 +26,7 @@ interface FilterSortBarProps {
 }
 
 const SORT_LABELS: Record<SortOption, string> = {
+  default: "Par défaut",
   "name-asc": "Nom (A-Z)",
   "name-desc": "Nom (Z-A)",
   "updates-first": "Mises à jour d'abord",

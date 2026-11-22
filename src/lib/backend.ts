@@ -175,6 +175,7 @@ export async function getAppState(): Promise<AppStateSnapshot> {
       autoCheckUpdates: true,
       requireSha256: false,
       theme: readCachedTheme(),
+      minimizeToTray: true,
     },
     hasGithubToken: false,
     dataDir: "%APPDATA%\\Craft.ro",
@@ -388,6 +389,25 @@ export async function subscribeDownloadProgress(
     return listen<DownloadProgressEvent>("download-progress", (e) => handler(e.payload));
   }
   return () => {};
+}
+
+export async function subscribeTrayEvents(handlers: {
+  onCheckUpdates: () => void;
+  onVisibilityChange: (visible: boolean) => void;
+}): Promise<UnlistenFn> {
+  if (!isTauriRuntime()) {
+    return () => {};
+  }
+  const unlistenUpdates = await listen("tray-check-updates", () => {
+    handlers.onCheckUpdates();
+  });
+  const unlistenVisibility = await listen<boolean>("window-visibility", (e) => {
+    handlers.onVisibilityChange(Boolean(e.payload));
+  });
+  return () => {
+    unlistenUpdates();
+    unlistenVisibility();
+  };
 }
 
 export const windowControls = {

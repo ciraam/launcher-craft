@@ -79,6 +79,7 @@ export interface Settings {
   autoCheckUpdates: boolean;
   requireSha256: boolean;
   theme: ThemeMode;
+  minimizeToTray: boolean;
 }
 
 export type DownloadStatus =
@@ -142,6 +143,7 @@ export interface ScoopImportResult {
 }
 
 export type SortOption =
+  | "default"
   | "name-asc"
   | "name-desc"
   | "updates-first"

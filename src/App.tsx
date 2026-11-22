@@ -58,14 +58,16 @@ export function App() {
     autoCheckUpdates: true,
     requireSha256: false,
     theme: readCachedTheme(),
+    minimizeToTray: true,
   });
+  const [isWindowHidden, setIsWindowHidden] = useState(false);
   const [hasGithubToken, setHasGithubToken] = useState(false);
   const [dataDir, setDataDir] = useState("");
   const [scoopIndexedCount, setScoopIndexedCount] = useState(0);
   const [progressMap, setProgressMap] = useState<Record<string, DownloadProgressEvent>>({});
   const [activeView, setActiveView] = useState<NavView>({ kind: "collection" });
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortOption>("name-asc");
+  const [sortBy, setSortBy] = useState<SortOption>("default");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
   const [sha256Only, setSha256Only] = useState(false);
@@ -83,7 +85,7 @@ export function App() {
 
   const resetFilters = useCallback(() => {
     setSearchQuery("");
-    setSortBy("name-asc");
+    setSortBy("default");
     setStatusFilter("all");
     setSourceFilter("all");
     setSha256Only(false);
@@ -91,7 +93,7 @@ export function App() {
 
   const hasActiveFilters =
     searchQuery.trim().length > 0 ||
-    sortBy !== "name-asc" ||
+    sortBy !== "default" ||
     statusFilter !== "all" ||
     sourceFilter !== "all" ||
     sha256Only;
@@ -100,12 +102,18 @@ export function App() {
     (title: string, description?: string, variant: ToastNotice["variant"] = "default") => {
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
       setToasts((prev) => [...prev.slice(-2), { id, title, description, variant }]);
-      window.setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
-      }, 4200);
     },
     []
   );
+
+  // Auto-dismiss toasts only while the window is visible (pauses timers in System Tray)
+  useEffect(() => {
+    if (isWindowHidden || toasts.length === 0) return;
+    const timer = window.setTimeout(() => {
+      setToasts((prev) => prev.slice(1));
+    }, 4200);
+    return () => window.clearTimeout(timer);
+  }, [isWindowHidden, toasts]);
 
   // Sync theme to <html> class & react to OS changes in "system" mode
   useEffect(() => {
@@ -157,6 +165,37 @@ export function App() {
     },
     [pushToast]
   );
+
+  // Pause CSS animations & timers when window is hidden in Tray or occluded
+  useEffect(() => {
+    const syncVisibility = (hidden: boolean) => {
+      setIsWindowHidden(hidden);
+      document.documentElement.classList.toggle("craft-paused", hidden);
+    };
+
+    const onDocVisibility = () => syncVisibility(document.hidden);
+    document.addEventListener("visibilitychange", onDocVisibility);
+
+    let unlistenTray: (() => void) | null = null;
+    void backend
+      .subscribeTrayEvents({
+        onCheckUpdates: () => {
+          void handleCheckAllUpdates(true, false);
+        },
+        onVisibilityChange: (visible) => {
+          syncVisibility(!visible);
+        },
+      })
+      .then((fn) => {
+        unlistenTray = fn;
+      });
+
+    return () => {
+      document.removeEventListener("visibilitychange", onDocVisibility);
+      if (unlistenTray) unlistenTray();
+      document.documentElement.classList.remove("craft-paused");
+    };
+  }, [handleCheckAllUpdates]);
 
   // Initial load + download-progress subscription
   useEffect(() => {
@@ -616,6 +655,10 @@ export function App() {
       return true;
     });
 
+    if (sortBy === "default") {
+      return filtered;
+    }
+
     const sorted = [...filtered].sort((a, b) => {
       if (sortBy === "name-asc") {
         return a.name.localeCompare(b.name, "fr");
@@ -688,7 +731,7 @@ export function App() {
 
   return (
     <TooltipProvider>
-      <div className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
+      <div className="craft-shell-enter flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
         {/* Custom Frameless Tauri Frosted Titlebar */}
         <TitleBar
           onOpenPalette={() => setPaletteOpen(true)}
@@ -1040,25 +1083,30 @@ export function App() {
                         : "space-y-2.5"
                     }
                   >
-                    {visibleApps.map((app) => (
-                      <AppCard
+                    {visibleApps.map((app, index) => (
+                      <div
                         key={app.id}
-                        app={app}
-                        installed={installedApps[app.id]}
-                        release={releases[app.id]}
-                        progress={progressMap[app.id]}
-                        isFavorite={favoriteSet.has(app.id)}
-                        layout={layout}
-                        onOpenDetail={setSelectedApp}
-                        onToggleFavorite={(a) => void handleToggleFavorite(a)}
-                        onRemoveCustomApp={(a) => void handleRemoveCustomApp(a)}
-                        onInstallOrUpdate={(a) => void handleInstallOrUpdate(a)}
-                        onCancelDownload={(id) => void handleCancelDownload(id)}
-                        onLaunch={(a) => void handleLaunch(a)}
-                        onOpenFolder={(a) => void handleOpenFolder(a)}
-                        onUninstall={(a) => void handleUninstall(a)}
-                        onCheckRelease={(a) => void handleCheckSingleRelease(a)}
-                      />
+                        className="craft-card-enter"
+                        style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}
+                      >
+                        <AppCard
+                          app={app}
+                          installed={installedApps[app.id]}
+                          release={releases[app.id]}
+                          progress={progressMap[app.id]}
+                          isFavorite={favoriteSet.has(app.id)}
+                          layout={layout}
+                          onOpenDetail={setSelectedApp}
+                          onToggleFavorite={(a) => void handleToggleFavorite(a)}
+                          onRemoveCustomApp={(a) => void handleRemoveCustomApp(a)}
+                          onInstallOrUpdate={(a) => void handleInstallOrUpdate(a)}
+                          onCancelDownload={(id) => void handleCancelDownload(id)}
+                          onLaunch={(a) => void handleLaunch(a)}
+                          onOpenFolder={(a) => void handleOpenFolder(a)}
+                          onUninstall={(a) => void handleUninstall(a)}
+                          onCheckRelease={(a) => void handleCheckSingleRelease(a)}
+                        />
+                      </div>
                     ))}
                   </div>
                 )}

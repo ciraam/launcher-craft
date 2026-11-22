@@ -75,7 +75,8 @@ export function SettingsView({
     draft.registryUrl !== settings.registryUrl ||
     draft.autoCheckUpdates !== settings.autoCheckUpdates ||
     draft.requireSha256 !== settings.requireSha256 ||
-    draft.theme !== settings.theme;
+    draft.theme !== settings.theme ||
+    draft.minimizeToTray !== settings.minimizeToTray;
 
   const handleBrowseFolder = async () => {
     const picked = await pickInstallDirectory(draft.installDir);
@@ -404,6 +405,26 @@ export function SettingsView({
             checked={draft.autoCheckUpdates}
             onCheckedChange={(checked) =>
               setDraft((prev) => ({ ...prev, autoCheckUpdates: Boolean(checked) }))
+            }
+          />
+        </div>
+
+        <Separator />
+
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[13.5px] font-medium text-foreground">
+              Réduire en arrière-plan à la fermeture
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Masque Craft.ro dans la zone de notification Windows (System Tray) et met en pause les animations pour une consommation CPU/GPU quasi nulle.
+            </p>
+          </div>
+          <Switch
+            disabled={!native}
+            checked={draft.minimizeToTray}
+            onCheckedChange={(checked) =>
+              setDraft((prev) => ({ ...prev, minimizeToTray: Boolean(checked) }))
             }
           />
         </div>

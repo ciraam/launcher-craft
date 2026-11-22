@@ -39,6 +39,7 @@ pub fn default_settings() -> Settings {
         auto_check_updates: true,
         require_sha256: false,
         theme: "dark".to_string(),
+        minimize_to_tray: true,
     }
 }
 
@@ -269,5 +270,18 @@ mod tests {
         assert!(registry.apps.iter().any(|a| a.id == "localsend"));
         assert!(registry.apps.iter().any(|a| a.id == "custom-beta"));
         assert_eq!(state.favorites, vec!["localsend", "custom-beta"]);
+    }
+
+    #[test]
+    fn test_settings_minimize_to_tray_defaults_true() {
+        let legacy_json = r#"{
+            "installDir": "C:\\Apps",
+            "registryUrl": "",
+            "autoCheckUpdates": true
+        }"#;
+        let parsed: Settings = serde_json::from_str(legacy_json).unwrap();
+        assert!(parsed.minimize_to_tray);
+        assert_eq!(parsed.theme, "dark");
+        assert!(!parsed.require_sha256);
     }
 }
