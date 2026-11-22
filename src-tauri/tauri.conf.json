@@ -30,6 +30,9 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "resources": {
+      "target/release/WebView2Loader.dll": "WebView2Loader.dll"
+    },
     "icon": [
       "icons/icon.png",
       "icons/icon.ico"
