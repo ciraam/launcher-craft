@@ -71,7 +71,7 @@ export function TitleBar({
             Craft<span className="text-[#5E6AD2] dark:text-[#8E98F8]">.ro</span>
           </span>
           <span className="hidden rounded-full border border-border bg-secondary/70 px-1.5 py-0.5 font-mono text-[9.5px] font-medium text-muted-foreground sm:inline-block">
-            v1.0.0
+            v1.2.0
           </span>
         </div>
       </div>

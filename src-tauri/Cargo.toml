@@ -1,6 +1,6 @@
 [package]
 name = "craft-ro-launcher"
-version = "1.0.0"
+version = "1.2.0"
 description = "Craft.ro — Launcher Desktop natif pour GitHub Releases"
 authors = ["Craft.ro"]
 edition = "2021"

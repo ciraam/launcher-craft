@@ -1,7 +1,7 @@
 {
   "name": "craft-ro-launcher",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.2.0",
   "type": "module",
   "description": "Craft.ro — Launcher Desktop natif pour GitHub Releases (Tauri v2 + Rust + React + TypeScript)",
   "scripts": {
