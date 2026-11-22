@@ -43,6 +43,20 @@
       "accentColor": "#A78BFA",
       "homepage": "https://github.com/ciraam/orthocorrect",
       "source": "github"
+    },
+    {
+      "id": "gestio-key",
+      "name": "GestioKey",
+      "tagline": "Gestionnaire de mots de passe et clés sécurisé sur bureau",
+      "description": "Gestionnaire de mots de passe, clés et secrets conçu pour centraliser et sécuriser vos accès depuis votre poste Windows.",
+      "category": "Utilitaires",
+      "repo": "ciraam/gestio-key",
+      "icon": "gestio-key",
+      "assetPattern": "*windows*.zip",
+      "executableName": "gestio-key.exe",
+      "accentColor": "#F59E0B",
+      "homepage": "https://github.com/ciraam/gestio-key",
+      "source": "github"
     }
   ]
 }
